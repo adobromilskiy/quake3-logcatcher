@@ -26,7 +26,7 @@ func main() {
 		log.Fatalf("[ERROR] flags.Parse: %s", err)
 	}
 
-	client, err := api.NewClient(opts.Socket, opts.Timeout)
+	client, err := api.NewClient(opts.Socket, opts.Container, opts.Timeout)
 	if err != nil {
 		log.Fatalf("[ERROR] api.NewClient: %s", err)
 	}

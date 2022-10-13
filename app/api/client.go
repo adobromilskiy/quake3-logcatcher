@@ -12,9 +12,10 @@ import (
 )
 
 type Client struct {
-	endpoint string
-	client   *http.Client
-	timeout  time.Duration
+	endpoint  string
+	client    *http.Client
+	timeout   time.Duration
+	container string
 }
 
 type Container struct {
@@ -22,7 +23,7 @@ type Container struct {
 	Names []string `json:"Names"`
 }
 
-func NewClient(socket string, timeout time.Duration) (c *Client, err error) {
+func NewClient(socket, container string, timeout time.Duration) (c *Client, err error) {
 	if _, err := os.Stat(socket); os.IsNotExist(err) {
 		return nil, fmt.Errorf("socket %s does not exist", socket)
 	}
@@ -34,26 +35,39 @@ func NewClient(socket string, timeout time.Duration) (c *Client, err error) {
 	}
 
 	return &Client{
-		endpoint: "http://localhost",
-		client:   &http.Client{Transport: tr, Timeout: time.Second * 5},
-		timeout:  timeout,
+		endpoint:  "http://localhost",
+		client:    &http.Client{Transport: tr, Timeout: time.Second * 5},
+		timeout:   timeout,
+		container: fmt.Sprintf("/%s", container),
 	}, nil
 }
 
 func (c *Client) Run() (err error) {
 	for {
-		containers, err := c.getcontainers()
+		container, err := c.getcontainer()
 		if err != nil {
 			return err
 		}
 
-		log.Println(containers)
+		if container.ID == "" {
+			log.Printf("[WARN] container %s does not exist", c.container)
+			time.Sleep(c.timeout)
+			continue
+		}
+
+		logs, err := c.getlogs(container.ID)
+		if err != nil {
+			return err
+		}
+
+		log.Println(string(logs))
+		// DOIT save logs to database
 
 		time.Sleep(c.timeout)
 	}
 }
 
-func (c *Client) getcontainers() (res []Container, err error) {
+func (c *Client) getcontainer() (res Container, err error) {
 	resp, err := c.client.Get(fmt.Sprintf("%s/containers/json", c.endpoint))
 	if err != nil {
 		return res, fmt.Errorf("api.getcontainers: can not get list of containers: %s", err)
@@ -65,8 +79,31 @@ func (c *Client) getcontainers() (res []Container, err error) {
 		return res, fmt.Errorf("api.getcontainers: can not read response body: %s", err)
 	}
 
-	if err := json.Unmarshal(body, &res); err != nil {
+	var containers []Container
+
+	if err := json.Unmarshal(body, &containers); err != nil {
 		return res, fmt.Errorf("api.getcontainers: can not unmarshal response body: %s", err)
+	}
+
+	for _, container := range containers {
+		if container.Names[0] == c.container {
+			return container, nil
+		}
+	}
+
+	return res, nil
+}
+
+func (c *Client) getlogs(container string) (res []byte, err error) {
+	resp, err := c.client.Get(fmt.Sprintf("%s/containers/%s/logs?stdout=1&stderr=1", c.endpoint, container))
+	if err != nil {
+		return res, fmt.Errorf("api.getlogs: can not get logs for container %s: %s", container, err)
+	}
+	defer resp.Body.Close()
+
+	res, err = io.ReadAll(resp.Body)
+	if err != nil {
+		return res, fmt.Errorf("api.getlogs: can not read response body: %s", err)
 	}
 
 	return res, nil
