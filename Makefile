@@ -22,4 +22,4 @@ image:
 .PHONY: run
 ## run: run docker container
 run:
-	@docker run -v /var/run/docker.sock:/docker.sock --rm adobromilskiy/quake3-logcatcher:latest
+	@docker run -v /var/run/docker.sock:/run/docker.sock --rm adobromilskiy/quake3-logcatcher:latest --dbconn="mongodb://mongodb:27017" --container="quake3-server"
