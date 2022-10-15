@@ -19,7 +19,12 @@ build:
 image:
 	@docker build -t adobromilskiy/quake3-logcatcher .
 
-.PHONY: run
-## run: run docker container
-run:
-	@docker run -v /var/run/docker.sock:/run/docker.sock --rm adobromilskiy/quake3-logcatcher:latest --dbconn="mongodb://mongodb:27017" --container="quake3-server"
+.PHONY: api
+## api: run docker container
+api:
+	@docker run -v /var/run/docker.sock:/run/docker.sock --rm adobromilskiy/quake3-logcatcher:latest --dbconn="mongodb://mongodb:27017" --container="quake3-server" --path="/run/docker.sock" --socket
+
+.PHONY: file
+## file: parse qconsole.log file
+file:
+	@docker run -v /Users/twist/projects/quake3-logcatcher/qconsole.log:/qconsole.log --rm adobromilskiy/quake3-logcatcher:latest --dbconn="mongodb://mongodb:27017" --path="/qconsole.log"

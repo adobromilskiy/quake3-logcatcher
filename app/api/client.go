@@ -50,7 +50,7 @@ func (c *Client) Run() (err error) {
 		}
 
 		if container.ID == "" {
-			log.Printf("[WARN] container %s does not exist", c.container)
+			log.Printf("[WARN] api.Run: container %s does not exist", c.container)
 			time.Sleep(c.timeout)
 			continue
 		}
