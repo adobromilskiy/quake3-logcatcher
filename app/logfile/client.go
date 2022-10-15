@@ -2,8 +2,9 @@ package logfile
 
 import (
 	"fmt"
-	"log"
 	"os"
+
+	"github.com/adobromilskiy/quake3-logcatcher/app/catcher"
 )
 
 type Client struct {
@@ -26,8 +27,10 @@ func (c *Client) Run() error {
 		return fmt.Errorf("can not read file %s: %s", c.file, err)
 	}
 
-	log.Println(string(logs))
-	// DOIT save logs to database
+	ct := catcher.Catcher{}
+	if err := ct.Do(logs); err != nil {
+		return fmt.Errorf("can not catch logs: %s", err)
+	}
 
 	return nil
 }

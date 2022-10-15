@@ -9,6 +9,8 @@ import (
 	"net/http"
 	"os"
 	"time"
+
+	"github.com/adobromilskiy/quake3-logcatcher/app/catcher"
 )
 
 type Client struct {
@@ -60,8 +62,10 @@ func (c *Client) Run() (err error) {
 			return err
 		}
 
-		log.Println(string(logs))
-		// DOIT save logs to database
+		ct := catcher.Catcher{}
+		if err := ct.Do(logs); err != nil {
+			return fmt.Errorf("can not catch logs: %s", err)
+		}
 
 		time.Sleep(c.timeout)
 	}
