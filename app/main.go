@@ -1,11 +1,13 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"time"
 
 	"github.com/adobromilskiy/quake3-logcatcher/app/api"
+	"github.com/adobromilskiy/quake3-logcatcher/app/catcher"
 	"github.com/adobromilskiy/quake3-logcatcher/app/logfile"
 	"github.com/jessevdk/go-flags"
 )
@@ -22,7 +24,7 @@ var opts struct {
 }
 
 type Logcatcher interface {
-	Run() error
+	Run(ct *catcher.Catcher) error
 }
 
 func main() {
@@ -45,7 +47,12 @@ func main() {
 		log.Fatalf("[ERROR] NewClient: %s", err)
 	}
 
-	if err := lc.Run(); err != nil {
+	catcher, err := catcher.New(context.Background(), opts.DbConn, opts.DbName)
+	if err != nil {
+		log.Fatalf("[ERROR] catcher.New: %s", err)
+	}
+
+	if err := lc.Run(catcher); err != nil {
 		log.Fatalf("[ERROR] client.Run: %s", err)
 	}
 }

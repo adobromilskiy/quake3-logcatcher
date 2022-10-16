@@ -21,13 +21,12 @@ func NewClient(file string) (c *Client, err error) {
 	}, nil
 }
 
-func (c *Client) Run() error {
+func (c *Client) Run(ct *catcher.Catcher) error {
 	logs, err := os.ReadFile(c.file)
 	if err != nil {
 		return fmt.Errorf("can not read file %s: %s", c.file, err)
 	}
 
-	ct := catcher.Catcher{}
 	if err := ct.Do(logs); err != nil {
 		return fmt.Errorf("can not catch logs: %s", err)
 	}

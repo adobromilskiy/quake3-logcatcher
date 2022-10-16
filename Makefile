@@ -5,8 +5,9 @@ help:
 	@sed -n 's/^##//p' ${MAKEFILE_LIST} | column -t -s ':' |  sed -e 's/^/ /'
 
 .PHONY: test
-## test: runs tests
+## test: runs tests and linters
 test:
+	@golangci-lint run ./...
 	@go test -mod=vendor ./app/... -coverprofile cover.out
 
 .PHONY: build

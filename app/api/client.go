@@ -44,7 +44,7 @@ func NewClient(socket, container string, timeout time.Duration) (c *Client, err 
 	}, nil
 }
 
-func (c *Client) Run() (err error) {
+func (c *Client) Run(ct *catcher.Catcher) (err error) {
 	for {
 		container, err := c.getcontainer()
 		if err != nil {
@@ -62,7 +62,6 @@ func (c *Client) Run() (err error) {
 			return err
 		}
 
-		ct := catcher.Catcher{}
 		if err := ct.Do(logs); err != nil {
 			return fmt.Errorf("can not catch logs: %s", err)
 		}
