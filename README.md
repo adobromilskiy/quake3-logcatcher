@@ -1,6 +1,18 @@
 # quake3-logcatcher
 
+[![build](https://github.com/adobromilskiy/quake3-logcatcher/actions/workflows/ci.yml/badge.svg)](https://github.com/adobromilskiy/quake3-logcatcher/actions/workflows/ci.yml) [![Go Report Card](https://goreportcard.com/badge/github.com/adobromilskiy/quake3-logcatcher)](https://goreportcard.com/report/github.com/adobromilskiy/quake3-logcatcher) [![Coverage Status](https://coveralls.io/repos/github/adobromilskiy/quake3-logcatcher/badge.svg?branch=main&kill_cache=1)](https://coveralls.io/github/adobromilskiy/quake3-logcatcher?branch=main)
+
 Simple application to parse logs from dockerized [quake3-server](https://github.com/adobromilskiy/quake3-server) via docker [API](https://docs.docker.com/engine/api/) in realtime and save them to a mongodb. Or you can parse qconsole.log file.
+
+- Repositories:
+  - GitHub: [github.com/adobromilskiy/quake3-logcatcher](https://github.com/adobromilskiy/quake3-logcatcher)
+  - DockerHub: [adobromilskiy/quake3-logcatcher](https://hub.docker.com/r/adobromilskiy/quake3-logcatcher)
+
+
+- Dockerfile: [https://github.com/adobromilskiy/quake3-logcatcher/blob/main/Dockerfile](https://github.com/adobromilskiy/quake3-logcatcher/blob/main/Dockerfile)
+
+
+- Maintained by: [Alexander Dobromilskiy](https://twst.dev)
 
 ### Application parameters
 
