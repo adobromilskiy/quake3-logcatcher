@@ -39,6 +39,13 @@ jobs:
         docker login --username ${{ secrets.DOCKERHUB_USER }} --password ${{ secrets.DOCKERHUB_PASSWD }}
         docker push adobromilskiy/quake3-logcatcher:${{ github.ref_name }}
 
+    - name: build and push latest image
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      run: |
+        docker build -t adobromilskiy/quake3-logcatcher:latest .
+        docker login --username ${{ secrets.DOCKERHUB_USER }} --password ${{ secrets.DOCKERHUB_PASSWD }}
+        docker push adobromilskiy/quake3-logcatcher:latest
+
     - name: build and push tagged image
       if: github.event_name == 'push' && github.event.ref_type == 'tag'
       run: |
