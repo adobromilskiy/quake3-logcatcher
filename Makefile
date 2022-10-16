@@ -27,4 +27,4 @@ api:
 .PHONY: file
 ## file: parse qconsole.log file
 file:
-	@docker run -v /Users/twist/projects/quake3-logcatcher/qconsole.log:/qconsole.log --rm adobromilskiy/quake3-logcatcher:latest --dbconn="mongodb://mongodb:27017" --path="/qconsole.log"
+	@docker run -v /Users/twist/projects/quake3-logcatcher/data/qconsole.log:/qconsole.log --rm adobromilskiy/quake3-logcatcher:latest --dbconn="mongodb://mongodb:27017" --path="/qconsole.log"

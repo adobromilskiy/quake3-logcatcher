@@ -1,0 +1,23 @@
+networks:
+  mongonet:
+    driver: bridge
+
+services:
+  db:
+    image: mongo:6.0
+    hostname: mongodb
+    ports:
+        - "27017:27017"
+    networks:
+      - mongonet
+
+  srv:
+    container_name: q3srv
+    image: adobromilskiy/quake3-server:latest
+    hostname: q3srv
+    networks:
+      - mongonet
+    volumes:
+      - /Users/twist/Downloads/pak0.pk3:/root/.q3a/baseq3/pak0.pk3
+    environment:
+      - SERVER_ARGS="+set fs_game cpma +exec ffa"
