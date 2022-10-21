@@ -18,6 +18,7 @@ type Client struct {
 	client    *http.Client
 	timeout   time.Duration
 	container string
+	since     int64
 }
 
 type Container struct {
@@ -98,7 +99,7 @@ func (c *Client) getcontainer() (res Container, err error) {
 }
 
 func (c *Client) getlogs(container string) (res []byte, err error) {
-	resp, err := c.client.Get(fmt.Sprintf("%s/containers/%s/logs?stdout=1&stderr=1", c.endpoint, container))
+	resp, err := c.client.Get(fmt.Sprintf("%s/containers/%s/logs?stdout=1&stderr=1&since=%d", c.endpoint, container, c.since))
 	if err != nil {
 		return res, fmt.Errorf("api.getlogs: can not get logs for container %s: %s", container, err)
 	}
@@ -108,6 +109,8 @@ func (c *Client) getlogs(container string) (res []byte, err error) {
 	if err != nil {
 		return res, fmt.Errorf("api.getlogs: can not read response body: %s", err)
 	}
+
+	c.since = time.Now().Unix()
 
 	return res, nil
 }
