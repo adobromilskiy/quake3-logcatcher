@@ -39,7 +39,7 @@ func NewClient(socket, container string, timeout time.Duration) (c *Client, err 
 
 	return &Client{
 		endpoint:  "http://localhost",
-		client:    &http.Client{Transport: tr, Timeout: time.Second * 5},
+		client:    &http.Client{Transport: tr, Timeout: time.Second * 30},
 		timeout:   timeout,
 		container: fmt.Sprintf("/%s", container),
 	}, nil
