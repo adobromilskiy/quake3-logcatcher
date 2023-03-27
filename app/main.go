@@ -9,7 +9,7 @@ import (
 	"github.com/adobromilskiy/quake3-logcatcher/app/api"
 	"github.com/adobromilskiy/quake3-logcatcher/app/catcher"
 	"github.com/adobromilskiy/quake3-logcatcher/app/logfile"
-	"github.com/jessevdk/go-flags"
+	"github.com/umputun/go-flags"
 )
 
 var revision = "unknown"
